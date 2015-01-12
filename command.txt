@@ -1,0 +1,31 @@
+-findAll dontCreateEntity( listar todos os não cadastrados)
+
+-findAll entity (listar os cadastrados)
+
+-findAll crumbsDontSend (lista todos os crumbs não enviados)
+
+-findIdGoogleByNoTelefone <numero> ( Busca o id da google pelo tefelone no arquivo enititys.txt)
+
+-findNoTelefoneByIdGoogle <numero>  (Busca o numero do telefone pelo id da Google na Google)
+
+-createEntity -listDadosJson ( criar entidade pela lista)
+
+-createEntity -listDataDontSend( montar o crumb pela lista) 
+
+-deleteAll (delete tudo para teste )
+
+-addTelefone <numero> (adiciona um numero como Entity no Google e no arquivo entitys.txt)
+
+-deleteTelefone <numero> (deleta uma Entity no Google e no arquivo entitys.txt)
+
+-install (a primeira vez que for usar para criar os arquviso )
+
+-recordCrumbs listDadosJson (grava o crumbs pelo arquivo dados.json)
+
+-recordCrumbs listDadosJsonDontSend grava o crumbs pelo arquivo da dados_json_nao_cadastro_crumbs.json )
+
+-retrieveCrumbsHistory before <entityID> <timestamp> <countBefore>    ( lista o historico do Crumbs, countBefore de rasto antes da data. count maximo é 512 ) 
+
+-retrieveCrumbsHistory after <entityID> <timestamp> <countAfter>    (lista o historico do Crumbs, countAter de rasto depois da data . count maximo é 512) 
+
+--retrieveCrumbsHistory <entityID> <timestamp>  (lista os proximos 512 rastros do dia marcado)
