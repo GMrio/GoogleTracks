@@ -229,6 +229,9 @@ public class GoogleDAO extends LogDAO{
 				logDAO.createINFO("Foi cadastrado um Crumbs do id:" + entityId);
 				return true;
 			} else {
+				Error error = new Error();
+				error = gson.fromJson(response, Error.class);
+				System.out.println(error.getCode() + "  -  " + error.getMessage());
 				logDAO.createERROR("Perca de conexão ou algum erro com a transação do Crumbs com o Id :"+entityId);
 				return false;
 			}

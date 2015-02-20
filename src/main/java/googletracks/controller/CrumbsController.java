@@ -62,7 +62,7 @@ public class CrumbsController {
 			
 			//Coletando dados por dados
 			for (DadosJson dados : dadosJsonVO.getCrumbs()){
-
+				System.out.println("==================================");
 				DatabaseFileDAO databaseFileDAO = new DatabaseFileDAO();
 				
 				//verifica se existe o idGoogle no Database (arquivo)
@@ -71,7 +71,7 @@ public class CrumbsController {
 				if(idGoogle == null || idGoogle.equals("")){ 
 					System.out.println("noTelefone" + dados.getNoTelefone() + " nao contem o EntityId");
 					
-					this.logDAO.createINFO("noTelefone nao contem o EntityId");
+					this.logDAO.createINFO("noTelefone nao contem o EntityId = " + dados.getNoTelefone());
 					//throw new Exception("noTelefone nao contem o EntityId");
 				
 				} else {
@@ -89,7 +89,19 @@ public class CrumbsController {
 					Location location = new Location(dados.getLatitude(), dados.getLogado());
 					crumbs.setLocation(location);
 					
-					int precisao = Integer.parseInt(dados.getPrecisao());
+					Integer precisao = 999;
+					
+					
+					
+					//System.out.println("GET DADOS.PRECISAO = " + dados.getPrecisao());
+					try {
+						precisao = Integer.parseInt(dados.getPrecisao());
+						//System.out.println("try precisao = " + precisao);
+					} catch (Exception e) {
+						//System.out.println("catch precisao = " + precisao);
+						dados.setPrecisao(precisao.toString());
+					}
+					
 					
 					if(precisao <= 0){
 						dados.setPrecisao("0");
@@ -118,7 +130,7 @@ public class CrumbsController {
 					} else {
 						logDAO.createERROR("Erro ao gravar o crumbs");
 						logDAO.createINFO("noTelefone:" + dados.getNoTelefone() + ",idGoogle:" + crumbsRecording.getEntityId());
-						System.out.println("Ocorreu um erro ao gravar o crumbs, tente novamente !");
+						System.out.println("Erro ao gravar o crumbs");
 						System.out.println("noTelefone:" + dados.getNoTelefone() + ",idGoogle:" + crumbsRecording.getEntityId());
 						
 						
@@ -128,6 +140,18 @@ public class CrumbsController {
 				}
 			}
 			
+			System.out.println("============================================");
+			System.out.println("Tentativas dos dados que não foram inseridos");
+			System.out.println("============================================");
+			for(int w = 0 ; w < 3; w ++){
+				System.out.println("============================================");
+				System.out.println("Tentativas dos dados que não foram inseridos");
+				System.out.println("----  " + w +" ----");
+				System.out.println("============================================");
+				
+				
+				recordCrumbsByDadosJsonDontSendCrumb();
+			}
 			
 		} catch (Exception e) {
 			logDAO.createERROR("ERROR no CrumbsController.recordCrumbsReadingDadosJson");
@@ -165,11 +189,26 @@ public class CrumbsController {
 				
 				crumbsRecording.setEntityId(idGoogle);
 				
-				int precisao = 1;
+				Integer precisao = 999;
+				
+				
+				
+				System.out.println("GET DADOS.PRECISAO = " + dados.getPrecisao());
+				try {
+					precisao = Integer.parseInt(dados.getPrecisao());
+					System.out.println("try precisao = " + precisao);
+				} catch (Exception e) {
+					System.out.println("catch precisao = " + precisao);
+					dados.setPrecisao(precisao.toString());
+					
+				}
 				
 				if(dados.getPrecisao() == null || dados.getPrecisao().equals("null")){
 					dados.setPrecisao("1");
 				} else {
+					
+					//dados.setPrecisao(new String(precisao));
+					
 					precisao = Integer.parseInt(dados.getPrecisao());
 				
 				

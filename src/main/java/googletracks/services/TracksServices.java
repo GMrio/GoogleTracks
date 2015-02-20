@@ -47,6 +47,20 @@ public class TracksServices{
 
 	public String requestString(String method, String requestBody){
 		try {
+			/*
+			 *  proxy.rio.rj.gov.br  [10.2.118.64]
+			 * 
+			 * http://www0.rio.rj.gov.br/proxy/cass1.pac
+			 * 
+			 * */
+			
+			String proxyHost = "10.2.118.64";  
+		    String proxyPort = "8080";  
+			
+			System.setProperty("http.proxyHost", proxyHost);  
+	        System.setProperty("http.proxyPort", proxyPort);
+			
+			
     		// Check for valid setup.
             Preconditions.checkArgument(!RequiredData.SERVICE_ACCOUNT_EMAIL.startsWith("mfelipesp@gmail.com"),
                 "Please enter your service account e-mail from the Google APIs " +
@@ -75,14 +89,19 @@ public class TracksServices{
 //            String requestBody = entity; //args[1];
             
             String URI = "https://www.googleapis.com/tracks/v1/" + method;
-            HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
+            HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);//http://www0.rio.rj.gov.br/proxy/cass1.pac
+            
+            
+            
             GenericUrl url = new GenericUrl(URI);
+            
             
             HttpRequest request = requestFactory.buildPostRequest(url,ByteArrayContent.fromString(null, requestBody));
             request.getHeaders().setContentType("application/json");
             // Google servers will fail to process a POST/PUT/PATCH unless the Content-Length
             // header >= 1
             //request.setAllowEmptyContent(false);
+            
             
             HttpResponse shortUrl = request.execute();
 
