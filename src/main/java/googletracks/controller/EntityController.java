@@ -204,6 +204,7 @@ public class EntityController {
 			for (DatabaseFile data : database.getEntities()) {
 				System.out.println("idGoogle:" + data.getId() + " ,entity:" + data.getName());
 			}
+			logDAO.createINFO(database.getEntities().toString());
 			logDAO.createINFO("Trazendo toda a database file");
 		} catch (Exception e) {
 			e.printStackTrace();
