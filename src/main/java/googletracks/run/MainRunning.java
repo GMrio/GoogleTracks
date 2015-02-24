@@ -89,7 +89,7 @@ public class MainRunning {
 				} else if (arg2.equals("") && !arg4.trim().equals("x")){ // entity e timestamp 
 					crumbsController.retrieveCrumbsHistory(arg3, arg4, null, null);// entityId, timestamp, before, after
 					
-				} else if (arg2.equals("") && arg4.equals("x")){
+				} else if (arg2.equals("") && arg4.equals("x")){ // noTelefone X
 					crumbsController.retornaUltimosCrumbsHistory(arg3); // noTelefone
 				}
 				

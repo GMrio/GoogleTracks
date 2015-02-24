@@ -258,7 +258,6 @@ public class GoogleDAO extends LogDAO{
 			return crumbsRecording;
 			
 		} catch (Exception e) {
-			//e.printStackTrace();
 			return null;
 		}
 	}

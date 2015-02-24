@@ -320,7 +320,7 @@ public class CrumbsController {
 			if(idGoogle != null || !idGoogle.trim().equals("")){
 				Long timestamp = System.currentTimeMillis() / 1000L;
 				CrumbsRetrieveHistory crumbsRetrieveHistory = new CrumbsRetrieveHistory(idGoogle, timestamp.toString(), "512", null);
-				//System.out.println(crumbsRetrieveHistory);
+				System.out.println(crumbsRetrieveHistory);
 				
 				Gson gson = new Gson();
 				System.out.println(gson.toJson(crumbsRetrieveHistory));
@@ -346,6 +346,8 @@ public class CrumbsController {
 				
 				logDAO.createINFO("Listando os ultimos 512 Historico de Crumbs");
 				logDAO.createINFO(crumbsRecording.getCrumbs().toString());
+				logDAO.createINFO( "Total de crumbs " + crumbsRecording.getCrumbs().size());
+				logDAO.createINFO(new Date().toString());
 				
 			} else {
 				

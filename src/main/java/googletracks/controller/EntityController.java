@@ -149,36 +149,52 @@ public class EntityController {
 	 * CADASTRANDO ENTITY POR INSERÇÃO
 	 **************************************************/
 	public void createByTelefone(String noTelefone){
+		
 		try {
-			GoogleDAO googleDAO = new GoogleDAO();
-			DatabaseFileDAO databaseDAO = new DatabaseFileDAO();
+			Integer testeNoTelefone = Integer.parseInt(noTelefone);
+			testeNoTelefone = 0;
 			
 			
-			String result = databaseDAO.findByIdGoogleFromNoTelefone(noTelefone);  // verifica se existe o telefone na base
 			
-			
-			if(result == null){
-				String idGoogle = googleDAO.createEntity(noTelefone); // cria um entityId
-				if(idGoogle == null || idGoogle.equalsIgnoreCase("null")){
-					//System.out.println("Ocorreu um erro na comunicacao com a Google tente mais tarde");
-					logDAO.createERROR(noTelefone);
-					logDAO.createERROR("Ocorreu um erro na comunicacao com a Google tente mais tarde");
+			try {
+				GoogleDAO googleDAO = new GoogleDAO();
+				DatabaseFileDAO databaseDAO = new DatabaseFileDAO();
+				
+				
+				String result = databaseDAO.findByIdGoogleFromNoTelefone(noTelefone);  // verifica se existe o telefone na base
+				
+				
+				if(result == null){
+					String idGoogle = googleDAO.createEntity(noTelefone); // cria um entityId
+					if(idGoogle == null || idGoogle.equalsIgnoreCase("null")){
+						//System.out.println("Ocorreu um erro na comunicacao com a Google tente mais tarde");
+						logDAO.createERROR(noTelefone);
+						logDAO.createERROR("Ocorreu um erro na comunicacao com a Google tente mais tarde");
+					} else {
+						DatabaseFile databaseFile = new DatabaseFile(idGoogle, noTelefone); 
+						databaseDAO.saveEntities(databaseFile); //salva na base de dados
+						System.out.println("Cadastrado com Sucesso ! ");
+						System.out.println("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+						logDAO.createINFO("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+					}
+					
 				} else {
-					DatabaseFile databaseFile = new DatabaseFile(idGoogle, noTelefone); 
-					databaseDAO.saveEntities(databaseFile); //salva na base de dados
-					System.out.println("Cadastrado com Sucesso ! ");
-					System.out.println("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
-					logDAO.createINFO("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+					
+					System.out.println("O numero=" + noTelefone + "Ja existe e seu entityID=" + result);
 				}
-				
-			} else {
-				
-				System.out.println("O numero=" + noTelefone + "Ja existe e seu entityID=" + result);
+			} catch (Exception e) {
+				logDAO.createERROR("Ocorreu um erro EntityController createEntity");
+				logDAO.createERROR(e.getMessage());
 			}
+			
+			
+			
 		} catch (Exception e) {
-			logDAO.createERROR("Ocorreu um erro EntityController createEntity");
-			logDAO.createERROR(e.getMessage());
+			System.out.println("nao é numero de telefone");
 		}
+		
+		
+		
 	}
 	
 	
