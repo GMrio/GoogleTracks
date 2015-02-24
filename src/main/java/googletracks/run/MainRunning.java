@@ -95,7 +95,7 @@ public class MainRunning {
 				
 				int count = Integer.parseInt(arg5);
 				
-				if(count < 512 || count == 0){
+				if(count <= 512 || count == 0){
 					 if(arg2.equals("after")){
 						crumbsController.retrieveCrumbsHistory(arg3, arg4, null , arg5);
 					} else if ( arg2.equals("before")){

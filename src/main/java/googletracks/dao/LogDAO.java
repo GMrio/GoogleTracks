@@ -57,7 +57,7 @@ public class LogDAO {
 					fileWriter.close();
 				}
 				
-				if(lenght > 1000000 ){
+				if(lenght > 1000000 ){ // 1 000 000
 					//System.out.println("Pula para o proximo");
 					count ++;
 				}else {
