@@ -10,6 +10,7 @@ import googletracks.entities.DadosJsonVO;
 import googletracks.entities.DatabaseFileManager;
 import googletracks.model.DadosJson;
 import googletracks.model.DatabaseFile;
+import googletracks.regras.NoTelefoneRegras;
 
 public class EntityController {
 
@@ -150,50 +151,43 @@ public class EntityController {
 	 **************************************************/
 	public void createByTelefone(String noTelefone){
 		
-		try {
-			Integer testeNoTelefone = Integer.parseInt(noTelefone);
-			testeNoTelefone = 0;
+			NoTelefoneRegras regras = new NoTelefoneRegras();
 			
+			if(regras.noTelefoneCorreto(noTelefone)){
 			
-			
-			try {
-				GoogleDAO googleDAO = new GoogleDAO();
-				DatabaseFileDAO databaseDAO = new DatabaseFileDAO();
-				
-				
-				String result = databaseDAO.findByIdGoogleFromNoTelefone(noTelefone);  // verifica se existe o telefone na base
-				
-				
-				if(result == null){
-					String idGoogle = googleDAO.createEntity(noTelefone); // cria um entityId
-					if(idGoogle == null || idGoogle.equalsIgnoreCase("null")){
-						//System.out.println("Ocorreu um erro na comunicacao com a Google tente mais tarde");
-						logDAO.createERROR(noTelefone);
-						logDAO.createERROR("Ocorreu um erro na comunicacao com a Google tente mais tarde");
+				try {
+					GoogleDAO googleDAO = new GoogleDAO();
+					DatabaseFileDAO databaseDAO = new DatabaseFileDAO();
+					
+					
+					String result = databaseDAO.findByIdGoogleFromNoTelefone(noTelefone);  // verifica se existe o telefone na base
+					
+					
+					if(result == null){
+						String idGoogle = googleDAO.createEntity(noTelefone); // cria um entityId
+						if(idGoogle == null || idGoogle.equalsIgnoreCase("null")){
+							//System.out.println("Ocorreu um erro na comunicacao com a Google tente mais tarde");
+							logDAO.createERROR(noTelefone);
+							logDAO.createERROR("Ocorreu um erro na comunicacao com a Google tente mais tarde");
+						} else {
+							DatabaseFile databaseFile = new DatabaseFile(idGoogle, noTelefone); 
+							databaseDAO.saveEntities(databaseFile); //salva na base de dados
+							System.out.println("Cadastrado com Sucesso ! ");
+							System.out.println("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+							logDAO.createINFO("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+						}
+						
 					} else {
-						DatabaseFile databaseFile = new DatabaseFile(idGoogle, noTelefone); 
-						databaseDAO.saveEntities(databaseFile); //salva na base de dados
-						System.out.println("Cadastrado com Sucesso ! ");
-						System.out.println("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
-						logDAO.createINFO("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+						
+						System.out.println("O numero=" + noTelefone + "Ja existe e seu entityID=" + result);
 					}
-					
-				} else {
-					
-					System.out.println("O numero=" + noTelefone + "Ja existe e seu entityID=" + result);
+				} catch (Exception e) {
+					logDAO.createERROR("Ocorreu um erro EntityController createEntity");
+					logDAO.createERROR(e.getMessage());
 				}
-			} catch (Exception e) {
-				logDAO.createERROR("Ocorreu um erro EntityController createEntity");
-				logDAO.createERROR(e.getMessage());
+				
 			}
 			
-			
-			
-		} catch (Exception e) {
-			System.out.println("nao é numero de telefone");
-		}
-		
-		
 		
 	}
 	
@@ -226,19 +220,26 @@ public class EntityController {
 	 **************************************************/
 	
 	public String findIdGoogleByNoTelefone(String noTelefone){
-		DatabaseFileDAO dao = new DatabaseFileDAO();
 		
-		try {
-			String idGoogle = dao.findByIdGoogleFromNoTelefone(noTelefone);
-			if(idGoogle.equals("") || idGoogle == null){
-				System.out.println("Não existe esse número cadastrado");
+		NoTelefoneRegras regras = new NoTelefoneRegras();
+		
+		if(regras.noTelefoneCorreto(noTelefone)){
+			DatabaseFileDAO dao = new DatabaseFileDAO();
+			
+			try {
+				String idGoogle = dao.findByIdGoogleFromNoTelefone(noTelefone);
+				if(idGoogle.equals("") || idGoogle == null){
+					System.out.println("Não existe esse número cadastrado");
+					return null;
+				}else {
+					return idGoogle;
+				}
+			} catch (Exception e) {
+				logDAO.createERROR("Error EntityController.findIdGoogleByNoTelefone");
+				logDAO.createERROR(e.getMessage());
 				return null;
-			}else {
-				return idGoogle;
 			}
-		} catch (Exception e) {
-			logDAO.createERROR("Error EntityController.findIdGoogleByNoTelefone");
-			logDAO.createERROR(e.getMessage());
+		} else {
 			return null;
 		}
 	}
