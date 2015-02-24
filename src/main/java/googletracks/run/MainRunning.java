@@ -27,6 +27,10 @@ public class MainRunning {
 	
 	public static void main(String[] args) {	
 		
+		//iniciar antes de qualquer comando
+		StartUpController startUpController = new StartUpController();
+		startUpController.startup();
+		
 		if(args.length == 0){
 			System.out.println("Digite uma operacao.");
 			

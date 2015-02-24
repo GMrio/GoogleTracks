@@ -57,7 +57,7 @@ public class LogDAO {
 					fileWriter.close();
 				}
 				
-				if(lenght > 1000000 ){ // 1 000 000
+				if(lenght > 1000000 ){ // 1 .000 .000 bytes  ( 1 MB)
 					//System.out.println("Pula para o proximo");
 					count ++;
 				}else {
@@ -98,7 +98,7 @@ public class LogDAO {
 					fileWriter.close();
 				}
 				
-				if(lenght > 1000000 ){// 1 .000 .000 bytes
+				if(lenght > 1000000 ){// 1 .000 .000 bytes  ( 1 MB)
 					count ++;
 				}else {
 					Arquivo arq = new Arquivo();

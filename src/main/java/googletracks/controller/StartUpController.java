@@ -17,7 +17,7 @@ public class StartUpController {
 		File file = new File(RequiredData.FILE_ENTITIES);
 		
 		if(file.exists()){
-			System.out.println("Ja foi instalado");
+			//System.out.println("Ja foi instalado");
 		} else {
 		
 			try {
