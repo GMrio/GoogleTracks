@@ -13,6 +13,7 @@ import googletracks.model.DadosJson;
 import googletracks.model.Location;
 import googletracks.model.UserData;
 import googletracks.regras.NoTelefoneRegras;
+import googletracks.utils.CalendariosDatas;
 import googletracks.utils.Converts;
 
 import java.text.DateFormat;
@@ -320,7 +321,7 @@ public class CrumbsController {
 	
 	
 	
-	public void retornaUltimosCrumbsHistory(String noTelefone){
+	public void retornaUltimos512CrumbsHistory(String noTelefone){
 		
 		NoTelefoneRegras regras = new NoTelefoneRegras();
 		
@@ -377,6 +378,62 @@ public class CrumbsController {
 	}
 	
 	
+public void retornaUltimoCrumbsHistory(String noTelefone){
+		
+		NoTelefoneRegras regras = new NoTelefoneRegras();
+		
+		if(regras.noTelefoneCorreto(noTelefone)){
+		
+			try {
+				
+				EntityController entityController = new EntityController();
+				
+				String idGoogle = entityController.findIdGoogleByNoTelefone(noTelefone);
+				
+				if(idGoogle != null || !idGoogle.trim().equals("")){
+					Long timestamp = System.currentTimeMillis() / 1000L;
+					CrumbsRetrieveHistory crumbsRetrieveHistory = new CrumbsRetrieveHistory(idGoogle, timestamp.toString(), "1", null);
+					System.out.println(crumbsRetrieveHistory);
+					
+					Gson gson = new Gson();
+					System.out.println(gson.toJson(crumbsRetrieveHistory));
+					GoogleDAO dao = new GoogleDAO();
+					CrumbsRecording crumbsRecording =  dao.retrieveCrumbsHistory(crumbsRetrieveHistory);
+	//				
+					
+					for(Crumbs crumbs : crumbsRecording.getCrumbs()){
+						System.out.println("confidenceRadius:" + crumbs.getConfidenceRadius());
+						System.out.println("timestamp:" + crumbs.getTimestamp());
+						System.out.println("lat:" + crumbs.getLocation().getLat());
+						System.out.println("long:" + crumbs.getLocation().getLng());
+						System.out.println("bareia:" + crumbs.getUserData().getBateria());
+						System.out.println("gps" + crumbs.getUserData().getGps());
+						System.out.println("idEstado: " + crumbs.getUserData().getIdEstado());
+						System.out.println("imie:" + crumbs.getUserData().getImei());
+						System.out.println("logado:" + crumbs.getUserData().getLogado());
+						System.out.println("------");
+						
+					}
+					System.out.println("--Listado " +  crumbsRecording.getCrumbs().size() + " crumbs.");
+					
+					
+					logDAO.createINFO("Listando os ultimos 512 Historico de Crumbs");
+					logDAO.createINFO(crumbsRecording.getCrumbs().toString());
+					logDAO.createINFO( "Total de crumbs " + crumbsRecording.getCrumbs().size());
+					logDAO.createINFO(new Date().toString());
+					
+				} else {
+					
+					System.out.println("noTelefone não esta cadastrado.");
+				}
+				
+			} catch (Exception e) {
+				logDAO.createERROR("Ocorreu um erro no CrumbsController.retornaUltimosCrumbsHistory");
+				logDAO.createERROR(e.getMessage());
+			}
+		}
+	}
+	
 	
 	
 	
@@ -410,6 +467,10 @@ public class CrumbsController {
 	
 												
 	public void retrieveCrumbsHistoryDayById(String noTelefone, String minTimestamp, String maxTimestamp){
+		
+		
+		
+		
 		try {
 			
 			DatabaseFileDAO databaseFileDAO = new DatabaseFileDAO();
@@ -427,6 +488,11 @@ public class CrumbsController {
 			maxDate.setTime((long)maxTime* 1000);
 			
 			List<Crumbs> allCrumbs = new ArrayList<Crumbs>();
+			
+			LogDAO dao = new LogDAO();
+			Gson gson = new Gson();
+			
+			dao.createINFO("Consultando o CRUMBS do telefone :" + noTelefone + " no timestamp entre : " + minTimestamp + " a " + maxTimestamp);
 			
 			Converts converts = new Converts();
 			Date actualDate = new Date();
@@ -462,11 +528,11 @@ public class CrumbsController {
 					
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 					
-					System.out.println("Max DAte : " + df.format(maxDate));
+					//System.out.println("Max DAte : " + df.format(maxDate));					
+					//System.out.println("Actual DAte : " + df.format(actualDate));
+					//System.out.println("------");
 					
-					System.out.println("Actual DAte : " + df.format(actualDate));
-					System.out.println("------");
-					
+					//Data Maxima for menor que a Atual
 					if(maxDate.before(actualDate)){
 						startWhile = false;
 						break;
@@ -479,27 +545,64 @@ public class CrumbsController {
 			}
 			
 			int size = allCrumbs.size();
-			allCrumbs.remove(size-1);
+			if(size != 0){
+				allCrumbs.remove(size-1);
 			
-			for(Crumbs c : allCrumbs){
-				System.out.println("confidenceRadius:" + c.getConfidenceRadius());
-				System.out.println("timestamp:" + c.getTimestamp());
-				System.out.println("latitude:" + c.getLocation().getLat());
-				System.out.println("longitude:" + c.getLocation().getLng());
-				System.out.println("idEstado:" + c.getUserData().getIdEstado());
-				System.out.println("bateria: " + c.getUserData().getBateria());
-				System.out.println("gps: " + c.getUserData().getBateria());
-				System.out.println("imei: " + c.getUserData().getImei());
-				System.out.println("logado:" + c.getUserData().getLogado());
-				System.out.println("----");
+				for(Crumbs c : allCrumbs){
+					System.out.println("confidenceRadius:" + c.getConfidenceRadius());
+					System.out.println("timestamp:" + c.getTimestamp());
+					System.out.println("latitude:" + c.getLocation().getLat());
+					System.out.println("longitude:" + c.getLocation().getLng());
+					System.out.println("idEstado:" + c.getUserData().getIdEstado());
+					System.out.println("bateria: " + c.getUserData().getBateria());
+					System.out.println("gps: " + c.getUserData().getBateria());
+					System.out.println("imei: " + c.getUserData().getImei());
+					System.out.println("logado:" + c.getUserData().getLogado());
+					System.out.println("----");
+				}
+				
+				dao.createINFO(gson.toJson(allCrumbs));
+				System.out.println("--Listado " + size + " crumbs.");
+				dao.createINFO("--Listado " + size + " crumbs.");
+			} else {
+				System.out.println("--Listado " + size + " crumbs.");
+				dao.createINFO("--Listado " + size + " crumbs.");
 			}
-			
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
+	
+	public void retornaTodoCrumbsHoje(String noTelefone) {
+		NoTelefoneRegras noTelefoneRegras = new NoTelefoneRegras();
+		if(noTelefoneRegras.noTelefoneCorreto(noTelefone)){
+			
+			
+			
+			try {
+				
+				CalendariosDatas datas = new CalendariosDatas();
+				
+				Long timeOntem = datas.getRetornaDataHojeOuOntem("ontem").getTime() /1000L ;
+				Long timeHoje= datas.getRetornaDataHojeOuOntem("hoje").getTime() /1000L;
+				
+				
+				logDAO.createINFO("Informação de todos os crumbs de hoje");
+				
+				retrieveCrumbsHistoryDayById(noTelefone, timeOntem.toString(), timeHoje.toString());
+				
+				
+				
+			} catch (Exception e) {
+				
+			}
+			
+			
+		}
+		
+	}
 	
 	
 	

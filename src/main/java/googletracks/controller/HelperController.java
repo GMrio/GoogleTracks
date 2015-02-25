@@ -33,7 +33,9 @@ public class HelperController {
 		System.out.println("retrieveCrumbsHistory after <noTelefone> <timestamp> <count> -- Retorna a quantidade de trilha do Crumbs gravada posterior a data informada, com a quantidade informada e do numero informado");
 		System.out.println("retrieveCrumbsHistory dayBy <noTelefone> <minTimestamp> <maxTimestamp> -- Retorna toda a trilha entre os timestamps indicado do numero informado");
 		System.out.println("retrieveCrumbsHistory <noTelefone> <timestamp> -- Retorna a trilha do timestamp ");
-		System.out.println("retrieveCrumbsHistory <noTelefone> x -- Retorna as ultimas 512 trilhas do numero informado" );
+		System.out.println("retrieveCrumbsHistory <noTelefone> last512 -- Retorna as ultimas 512 trilhas do numero informado" );
+		System.out.println("retrieveCrumbsHistory <noTelefone> last1 -- Retorna a ultima trilhas do numero informado" );
+		System.out.println("retrieveCrumbsHistory <noTelefone> today -- Retorna todas as trilhas do dia" );
 		System.out.println("");
 		System.out.println("");
 		System.out.println("deleteCrumbs <noTelefone> <minTimestamp> <maxTimestamp> -- Deleta todas as trilhas entre as datas informadas");

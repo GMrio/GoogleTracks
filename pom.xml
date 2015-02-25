@@ -28,6 +28,15 @@
 		<!-- end::Json[] -->
 
 
+		<!-- JUnit[ -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+		<!-- JUnit] -->
+
 		<!-- tag::Google API -->
 		<dependency>
 			<groupId>com.google.api-client</groupId>

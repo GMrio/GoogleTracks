@@ -90,11 +90,19 @@ public class MainRunning {
 					crumbsController.retrieveCrumbsHistoryDayById(arg3, arg4, arg5);
 					arg5 = "9999";
 					
-				} else if (arg2.equals("") && !arg4.trim().equals("x")){ // entity e timestamp 
+				} else if (arg2.equals("") 
+						&& !arg4.trim().equals("last512")
+						&& !arg4.trim().equals("last1")
+						&& !arg4.trim().equals("today")){ 
+					
 					crumbsController.retrieveCrumbsHistory(arg3, arg4, null, null);// entityId, timestamp, before, after
 					
-				} else if (arg2.equals("") && arg4.equals("x")){ // noTelefone X
-					crumbsController.retornaUltimosCrumbsHistory(arg3); // noTelefone
+				} else if (arg2.equals("") && arg4.equals("last512")){ // noTelefone last512 (traz os ultimos 512)
+					crumbsController.retornaUltimos512CrumbsHistory(arg3); // noTelefone
+				} else if (arg2.equals("") && arg4.equals("last1")){ // noTelefone last1 ( traz o ultimo)
+					crumbsController.retornaUltimoCrumbsHistory(arg3); // noTelefone
+				} else if (arg2.equals("") && arg4.equals("today")){ // noTelefone today .. todos os registro de hoje
+					crumbsController.retornaTodoCrumbsHoje(arg3); //noTelefone
 				}
 				
 				int count = Integer.parseInt(arg5);

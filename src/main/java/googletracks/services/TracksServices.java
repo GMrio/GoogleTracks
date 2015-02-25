@@ -124,11 +124,11 @@ public class TracksServices{
 //			System.out.println("ERRO na transacao com o Google");
 			
 //			System.out.println(e.getMessage()); // Completao
-//			System.out.println(error[0]); // motivo
-//			System.out.println(error[7]); // msg
+			System.out.println(error[0]); // motivo
+			System.out.println(error[7]); // msg
 //			System.out.println(error[6]); // reason
 //			System.out.println(error[5]); // domain
-//			System.out.println(error[10]); //code
+			System.out.println(error[10]); //code
 			
 			String montagem = "";
 			
