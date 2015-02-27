@@ -1,6 +1,7 @@
 package googletracks.dao;
 
 import googletracks.entities.DadosJsonVO;
+import googletracks.entities.EntityCreate;
 import googletracks.model.DadosJson;
 import googletracks.utils.RequiredData;
 
@@ -43,6 +44,53 @@ public class DadosJsonDAO {
 		}
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+		LENDO O DADOS JSON CORRETO !
+	*/
+	public EntityCreate lerDadosJson() {
+		Gson gson = new Gson();
+		EntityCreate crumbs = new EntityCreate();
+		try {
+			BufferedReader output = new BufferedReader(new FileReader(RequiredData.ARQUIVO_DADOS_ENTITY_JSON));
+			crumbs = gson.fromJson(output, EntityCreate.class);
+			return crumbs;
+		} catch (Exception e) {
+			String error = e.getMessage();
+			logDAO.createERROR("Erro no DadosJsonDAO.findAllDadosJson()");
+			logDAO.createERROR(error);
+			return null;
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 *  Lendo arquivo dados_json_nao_cadastro_crumbs.json

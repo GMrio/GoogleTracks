@@ -1,6 +1,6 @@
 package googletracks.controller;
 
-import java.util.Date;
+import com.google.gson.Gson;
 
 import googletracks.dao.DadosJsonDAO;
 import googletracks.dao.DatabaseFileDAO;
@@ -8,6 +8,8 @@ import googletracks.dao.GoogleDAO;
 import googletracks.dao.LogDAO;
 import googletracks.entities.DadosJsonVO;
 import googletracks.entities.DatabaseFileManager;
+import googletracks.entities.EntityCreate;
+import googletracks.entities.EntityRetrieveIds;
 import googletracks.model.DadosJson;
 import googletracks.model.DatabaseFile;
 import googletracks.regras.NoTelefoneRegras;
@@ -19,7 +21,7 @@ public class EntityController {
 	/**************************************************
 	 * CRIAR ENTITY ATRAVES DO ARQUIVO DADOS.JSON
 	 **************************************************/
-
+	
 	public void createEntityByDadosJson() {
 
 		try {
@@ -78,6 +80,95 @@ public class EntityController {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**************************************************
+	 * CRIAR ENTITY ATRAVES DO ARQUIVO DADOSENTITY.JSON
+	 **************************************************/
+	
+	public void criarEntitityPeloDadosEntityJson() {
+		
+		try {
+			
+			DadosJsonDAO dadosJsonDAO = new DadosJsonDAO();
+			
+			EntityCreate entityCreate = dadosJsonDAO.lerDadosJson();
+			 
+			GoogleDAO googleDAO = new GoogleDAO();
+			EntityRetrieveIds ids = googleDAO.criarEntityIdPorLista(entityCreate);
+			
+			int size = ids.getEntityIds().size();
+			//System.out.println("Tamanho da EntityIDS = " + size);
+			
+			//System.out.println(entityCreate);
+			//System.out.println(ids);
+			
+			Gson gson = new Gson();
+			//System.out.println(gson.toJson(entityCreate));
+			
+			
+			/*
+			 * RESPOSTA DA PESQUISA
+			 * */
+			for(int x = 0 ; x < size ; x ++){				
+				String noTelefone = entityCreate.getEntities().get(x).getName();
+				String entityId = ids.getEntityIds().get(x);
+				
+				
+				/*
+				 * SALVAR NOVOS NOTELEFONE NA BASE
+				 * */
+				DatabaseFile databaseFile = new DatabaseFile();
+				databaseFile.setId(entityId);
+				databaseFile.setName(noTelefone);
+				
+				DatabaseFileDAO databaseFileDAO = new DatabaseFileDAO();
+				databaseFileDAO.saveEntities(databaseFile);
+				
+				
+				//returnCode=02;valueRequest=988121472;ValueResponse=dbe86c186dbc8f15
+				System.out.println("returnCode=01;valueRequest=" + noTelefone + ";valueResponse=" + entityId);
+			}
+			
+			
+			
+		} catch (Exception e) {
+			this.logDAO.createERROR("Ocorreu um erro no EntityController.criarEntityPeloDadosEntityJson");
+			this.logDAO.createERROR(e.getMessage());
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**************************************************
@@ -152,7 +243,7 @@ public class EntityController {
 	public void createByTelefone(String noTelefone){
 		
 			NoTelefoneRegras regras = new NoTelefoneRegras();
-			
+			String idGoogle = null;
 			if(regras.noTelefoneCorreto(noTelefone)){
 			
 				try {
@@ -160,11 +251,11 @@ public class EntityController {
 					DatabaseFileDAO databaseDAO = new DatabaseFileDAO();
 					
 					
-					String result = databaseDAO.findByIdGoogleFromNoTelefone(noTelefone);  // verifica se existe o telefone na base
+					idGoogle = databaseDAO.findByIdGoogleFromNoTelefone(noTelefone);  // verifica se existe o telefone na base
 					
 					
-					if(result == null){
-						String idGoogle = googleDAO.createEntity(noTelefone); // cria um entityId
+					if(idGoogle == null){
+						idGoogle = googleDAO.createEntity(noTelefone); // cria um entityId
 						if(idGoogle == null || idGoogle.equalsIgnoreCase("null")){
 							//System.out.println("Ocorreu um erro na comunicacao com a Google tente mais tarde");
 							logDAO.createERROR(noTelefone);
@@ -172,14 +263,18 @@ public class EntityController {
 						} else {
 							DatabaseFile databaseFile = new DatabaseFile(idGoogle, noTelefone); 
 							databaseDAO.saveEntities(databaseFile); //salva na base de dados
-							System.out.println("Cadastrado com Sucesso ! ");
-							System.out.println("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+							//System.out.println("Cadastrado com Sucesso ! ");
+							//System.out.println("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
+							
+							
+							//returnCode=02;valueRequest=988121472;ValueResponse=dbe86c186dbc8f15
+							System.out.println("returnCode=01;valueRequest=" + noTelefone + ";valueResponse=" + idGoogle);
 							logDAO.createINFO("noTelefone: " + noTelefone + ", idGoogle:" + idGoogle);
 						}
 						
 					} else {
-						
-						System.out.println("O numero=" + noTelefone + "Ja existe e seu entityID=" + result);
+						System.out.println("returnCode=02;valueRequest=" + noTelefone + ";valueResponse=" + idGoogle);
+						//System.out.println("O numero=" + noTelefone + "Ja existe e seu entityID=" + result);
 					}
 				} catch (Exception e) {
 					logDAO.createERROR("Ocorreu um erro EntityController createEntity");
@@ -230,7 +325,7 @@ public class EntityController {
 			try {
 				String idGoogle = dao.findByIdGoogleFromNoTelefone(noTelefone);
 				if(idGoogle.equals("") || idGoogle == null){
-					System.out.println("Não existe esse número cadastrado");
+					System.out.println("returnCode=03;valueRequest=" + noTelefone + ";valueResponse=null");
 					return null;
 				}else {
 					return idGoogle;
@@ -304,7 +399,9 @@ public class EntityController {
 						if(!check){
 							//System.out.println("Ocorreu um erro ao Excluir, tente novamente");
 						} else {
-							System.out.println("Numero excluido com sucesso !");
+							//System.out.println("Numero excluido com sucesso !");
+							
+							System.out.println("returnCode=01;valueRequest=" + noTelefone + ";valueResponse=" + idGoogle);
 						}
 					
 					} //Deleta na Google  
@@ -319,7 +416,8 @@ public class EntityController {
 			
 			
 			else {
-				System.out.println("Numero não existe");
+				//System.out.println("Numero não existe");
+				System.out.println("returnCode=02;valueRequest=" + noTelefone + ";valueResponse=" + idGoogle);
 			} // fechando o else do check Id no entity.txt
 			
 			

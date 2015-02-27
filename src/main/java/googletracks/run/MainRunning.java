@@ -3,11 +3,11 @@ package googletracks.run;
 import googletracks.controller.CrumbsController;
 import googletracks.controller.DadosJsonController;
 import googletracks.controller.EntityController;
+import googletracks.controller.ExecController;
 import googletracks.controller.GoogleController;
 import googletracks.controller.HelperController;
 import googletracks.controller.StartUpController;
 import googletracks.dao.LogDAO;
-import googletracks.model.DatabaseFile;
 
 
 
@@ -30,6 +30,24 @@ public class MainRunning {
 		//iniciar antes de qualquer comando
 		StartUpController startUpController = new StartUpController();
 		startUpController.startup();
+		
+		
+		System.getProperties().put("proxySet", "true");
+	    System.getProperties().put("proxyHost", "10.2.118.64"); //proxy.rio.rj.gov.br  10.2.118.64
+	    System.getProperties().put("proxyPort", "8080");
+		
+		
+		//exec
+	    /**
+		 * exec
+		 * 
+		 * */
+		
+		if(args[0].trim().equals("exec")){ //menu(args[0], null, args[1] , args[2], null);
+			ExecController controller = new ExecController();
+			controller.exec(args[1], args[2]);
+		}
+		
 		
 		if(args.length == 0){
 			System.out.println("Digite uma operacao.");
@@ -65,6 +83,11 @@ public class MainRunning {
 //			System.out.println(arg3);
 //			System.out.println(arg4);
 //			System.out.println(arg5);
+			
+			
+			
+			
+			
 			
 			
 			if(arg1 == null){
@@ -103,7 +126,7 @@ public class MainRunning {
 					crumbsController.retornaUltimoCrumbsHistory(arg3); // noTelefone
 				} else if (arg2.equals("") && arg4.equals("today")){ // noTelefone today .. todos os registro de hoje
 					crumbsController.retornaTodoCrumbsHoje(arg3); //noTelefone
-				}
+				} 
 				
 				int count = Integer.parseInt(arg5);
 				
@@ -138,7 +161,7 @@ public class MainRunning {
 			
 			
 			else {
-				System.out.println("Comando não válido");
+				//System.out.println("Comando não válido");
 			}
 			
 			
@@ -168,6 +191,8 @@ public class MainRunning {
 				HelperController controller = new HelperController();
 				controller.helper();
 			}
+			
+			
 			
 			
 			/**
@@ -212,6 +237,9 @@ public class MainRunning {
 				
 			} else if (arg2.equals("listDataDontSend")){
 				entityController.createEntityDadosNaoEnviados();
+				
+			} else if (arg2.equals("dadosEntityJson")){
+				entityController.criarEntitityPeloDadosEntityJson();
 				
 			}
 		
@@ -312,9 +340,12 @@ public class MainRunning {
 				
 			} else if (arg2.equals("listDadosJsonDontSend")){
 				crumbsController.recordCrumbsByDadosJsonDontSendCrumb();
-			}
+			} 
 		
 		}
+		
+		
+		
 		
 	}
 

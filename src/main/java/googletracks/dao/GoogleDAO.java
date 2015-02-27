@@ -90,6 +90,91 @@ public class GoogleDAO extends LogDAO{
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	
+		criando lista de entity ID
+	
+	*/
+	
+	public EntityRetrieveIds criarEntityIdPorLista(EntityCreate entityCreate){
+		//System.out.println("INICIO DA TRANSACAO COM O GOOGLE , CADASTRANDO ENTITY");
+		
+		try {
+			super.createINFO("INICIO DA TRANSACAO COM O GOOGLE , CADASTRANDO ENTITY");
+			
+			Gson gson = new Gson();
+			
+			String requestBody = gson.toJson(entityCreate);
+			
+			//System.out.println("GSON PRA GOOGLE");
+			//System.out.println(requestBody);
+			
+			super.createINFO("DADOS CRIADOS PARA JSON");
+			super.createINFO(requestBody);
+			
+			
+			String response = tracks.requestString(ENTITY_CREATE, requestBody);
+			
+			
+			
+			//System.out.println("RESPOSTA DA GOOGLE");
+			//System.out.println(response);
+			
+			
+			EntityRetrieveIds entityRetriveIds = new EntityRetrieveIds();
+			
+			try {
+				entityRetriveIds = gson.fromJson(response, EntityRetrieveIds.class);
+				
+			} catch (Exception e) {
+				System.out.println(response);				
+			}
+
+			return entityRetriveIds;
+			
+		} catch (Exception e) {
+			
+			super.createERROR("ERRO NA TRANSACAO COM O GOOGLE , GoogleDAO.createEntity " );
+			super.createERROR(e.getMessage());
+			super.createERROR(e.getLocalizedMessage());
+			super.createERROR(e.getCause().toString());
+			return null;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public EntityRetrieveIds createManyEntity(Entity1 entity1){
 		System.out.println("INICIO DA TRANSACAO COM O GOOGLE , CADASTRANDO ENTITY");
 		

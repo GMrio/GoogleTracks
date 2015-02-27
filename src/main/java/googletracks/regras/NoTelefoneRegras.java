@@ -25,6 +25,7 @@ public class NoTelefoneRegras {
 			}
 			return false;
 		}
+		
 	}
 
 }

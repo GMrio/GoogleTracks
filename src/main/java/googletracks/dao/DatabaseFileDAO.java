@@ -103,7 +103,7 @@ public class DatabaseFileDAO{
 			write.close();
 			return true;
 		} catch (Exception e) {
-			System.out.println("Erro no DatabaseFileDao");
+			logDAO.createERROR("Erro no DatabaseFileDao.saveEntities");
 			return false;
 		}
 	}

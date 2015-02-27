@@ -6,6 +6,7 @@ import java.util.List;
 public class EntityRetrieveIds {
 	
 	private List<String> entityIds = new ArrayList<String>();
+	
 	public EntityRetrieveIds() {
 		// TODO Auto-generated constructor stub
 	}
